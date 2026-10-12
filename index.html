@@ -11,18 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- CÓDIGO ONESIGNAL V16 -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "b85bcf3b-df80-476a-bacf-741995153efd",
-          notifyButton: {
-            enable: true, /* Ativa o sininho no canto da tela */
-          }
-        });
-      });
-    </script>
+<!-- CÓDIGO ONESIGNAL V16 COM CONFIGURAÇÃO DE SUBPASTA -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "b85bcf3b-df80-476a-bacf-741995153efd",
+      notifyButton: {
+        enable: true,
+      },
+      // Estas duas linhas dizem ao OneSignal para procurar dentro da pasta Joyfood:
+      serviceWorkerParam: { scope: '/Joyfood/' },
+      serviceWorkerPath: 'Joyfood/OneSignalSDKWorker.js'
+    });
+  });
+</script>
 
     <style>
         :root { --primary: #ea1d2c; --primary-dark: #cc1523; --white: #ffffff; --bg-color: #f7f7f8; --text-main: #3e3e3e; --text-light: #717171; --border: #f0f0f0; --success: #118c4f; --shadow: 0 2px 8px rgba(0,0,0,0.05); --safe-bottom: env(safe-area-inset-bottom, 20px); }
