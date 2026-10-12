@@ -527,17 +527,6 @@
     // ==============================================================================
 
     let deferredPrompt;
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
-            self.addEventListener('install', e => self.skipWaiting()); 
-            self.addEventListener('activate', e => self.clients.claim()); 
-            self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));
-            self.addEventListener('push', function(event) {
-                const options = { body: event.data.text(), icon: 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png', vibrate: [200, 100, 200, 100, 200] };
-                event.waitUntil(self.registration.showNotification('Marketplace', options));
-            });
-        `], { type: 'application/javascript' })));
-    }
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('pwa-install-banner').style.display = 'flex'; });
     function installPWA() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('pwa-install-banner').style.display = 'none'; }); } }
 
