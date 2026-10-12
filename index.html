@@ -10,6 +10,16 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "b85bcf3b-df80-476a-bacf-741995153efd",
+        });
+      });
+    </script>
+
     <style>
         :root { --primary: #ea1d2c; --primary-dark: #cc1523; --white: #ffffff; --bg-color: #f7f7f8; --text-main: #3e3e3e; --text-light: #717171; --border: #f0f0f0; --success: #118c4f; --shadow: 0 2px 8px rgba(0,0,0,0.05); --safe-bottom: env(safe-area-inset-bottom, 20px); }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
@@ -19,11 +29,9 @@
         .app-view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HEADER CLEAN IFOOD */
         header { background: var(--white); padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .header-top { display: flex; align-items: center; justify-content: center; }
         .brand-logo { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; }
-        .header-profile-btn { font-size: 0.85rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 5px; cursor: pointer; }
         
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(65px + var(--safe-bottom)); background: var(--white); box-shadow: 0 -2px 15px rgba(0,0,0,0.06); display: flex; justify-content: space-around; align-items: flex-start; padding-top: 12px; z-index: 190; border-top: 1px solid var(--border); }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #a6a6a6; background: none; border: none; cursor: pointer; position: relative; }
@@ -67,7 +75,6 @@
         .stores-grid .store-info { display: flex; flex-direction: column; align-items: center; }
         .stores-grid .store-meta { justify-content: center; }
 
-        /* ABA LOJA (Cardápio) */
         .store-banner { height: 150px; background: #333; position: relative; }
         .store-banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
         .btn-back-store { position: absolute; top: 15px; left: 15px; width: 40px; height: 40px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; font-size: 1.2rem; cursor: pointer; z-index: 10; box-shadow: var(--shadow); }
@@ -81,13 +88,11 @@
         .product-price { font-weight: 900; font-size: 1rem; color: var(--success); }
         .product-img { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; background: #eee; }
 
-        /* ABA BUSCA ISOLADA */
         .search-page-header { padding: 20px; position: sticky; top: 0; background: var(--white); z-index: 10; border-bottom: 1px solid var(--border); }
         .search-input-box { background: #f5f5f5; border-radius: 12px; padding: 14px 15px; display: flex; align-items: center; gap: 12px; }
         .search-input-box input { border: none; background: none; outline: none; width: 100%; font-size: 1.05rem; font-family: inherit; font-weight: 600; color:#333; }
         .search-input-box svg { stroke: var(--primary); }
 
-        /* MODAL DE PRODUTO E OPÇÕES */
         #product-modal { position: fixed; inset: 0; background: var(--bg-color); z-index: 250; display: none; flex-direction: column; overflow-y: auto; padding-bottom: 100px; }
         .pm-img { width: 100%; height: 260px; object-fit: cover; background: #eee; }
         .pm-content { padding: 20px; background: var(--white); border-radius: 24px 24px 0 0; margin-top: -24px; position: relative; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
@@ -119,7 +124,6 @@
         .pm-add-btn:disabled { background: #ccc; cursor: not-allowed; }
         .pm-add-btn:active:not(:disabled) { transform: scale(0.98); background: var(--primary-dark); }
 
-        /* SACOLA FLUTUANTE (FLOATING CART) */
         .floating-cart { position: fixed; bottom: calc(75px + var(--safe-bottom)); left: 15px; right: 15px; background: var(--primary); color: var(--white); border-radius: 12px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 6px 20px rgba(234,29,44,0.3); transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 180; cursor: pointer; }
         .floating-cart.visible { transform: translateY(0); }
         .fc-info { display: flex; flex-direction: column; }
@@ -127,7 +131,6 @@
         .fc-items { font-size: 0.8rem; font-weight: 700; opacity: 0.9; }
         .fc-btn { background: none; color: var(--white); border: none; font-weight: 900; font-size: 1rem; pointer-events: none; }
 
-        /* GAVETA DA SACOLA E ENDERECOS */
         #cart-drawer { position: fixed; inset: 0; background: var(--bg-color); z-index: 300; display: none; flex-direction: column; padding-bottom: var(--safe-bottom); }
         .cart-header { background: var(--white); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1.2rem; border-bottom: 1px solid var(--border); }
         .cart-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
@@ -143,7 +146,6 @@
         .checkout-card { background: var(--white); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
         .checkout-title { font-weight: 900; font-size: 1.1rem; margin-bottom: 15px; color: #111; display:flex; justify-content:space-between; align-items:center; }
         
-        /* Dropdown para endereços */
         .address-selector { width: 100%; padding: 12px; border: 2px solid var(--primary); border-radius: 10px; font-size: 0.95rem; font-weight: 700; outline: none; background: #fff5f5; color: var(--primary); margin-bottom: 15px; cursor: pointer; }
         .address-selector:focus { border-color: var(--primary-dark); }
         
@@ -158,7 +160,6 @@
         .btn-checkout { width: 100%; background: var(--success); color: var(--white); padding: 16px; border-radius: 12px; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
         .btn-checkout:disabled { background: #9c9c9c; cursor: not-allowed; }
 
-        /* AUTENTICAÇÃO, PERFIL E ENDEREÇOS */
         .auth-card { background: var(--white); padding: 30px 20px; border-radius: 16px; margin: 20px; border: 1px solid var(--border); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .auth-card h2 { font-weight: 900; font-size: 1.5rem; margin-bottom: 10px; }
         .auth-card p { font-size: 0.9rem; color: #666; margin-bottom: 25px; font-weight: 600; }
@@ -172,7 +173,6 @@
         .address-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 400; display: none; align-items: center; justify-content: center; padding: 20px; }
         .address-modal-content { background: #fff; width: 100%; max-width: 400px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* ABA PEDIDOS E RASTREIO */
         .order-history-card { background: var(--white); border-radius: 12px; padding: 18px; margin: 15px 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .oh-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: #888; font-weight: 700; }
         .oh-store { font-weight: 900; font-size: 1.1rem; color: #111; }
@@ -200,7 +200,6 @@
         .step div p { font-size: 0.8rem; color: var(--text-light); }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 29, 44, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0,0,0,0); } }
 
-        /* MODAIS GERAIS (Avaliação, PWA, etc) */
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; display: none; backdrop-filter: blur(2px); }
         .overlay.active { display: block; }
         
@@ -208,7 +207,6 @@
         .bottom-sheet.open { bottom: 0; }
         .drag-bar { width: 40px; height: 5px; background: #ddd; border-radius: 10px; margin: 0 auto 20px; }
         
-        /* Modal Avaliacao */
         .rating-stars { display: flex; justify-content: center; gap: 10px; margin: 20px 0; font-size: 2.5rem; color: #ddd; cursor: pointer; }
         .rating-stars span { transition: 0.2s; }
         .rating-stars span.active { color: #f59e0b; text-shadow: 0 0 10px rgba(245,158,11,0.5); }
@@ -248,7 +246,6 @@
         <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
     </div>
 
-    <!-- Área visível apenas para notas 1 a 3 -->
     <div id="low-rating-area" style="display: none; width:100%; text-align:center;">
         <p style="font-weight:800; color:#b91c1c; margin-bottom:10px;">O que deu errado?</p>
         <div class="reason-chips" id="reason-container">
@@ -265,14 +262,16 @@
     <button class="pm-add-btn" id="btn-send-rate" onclick="sendRating()" style="width:100%; justify-content:center; padding:15px; border-radius:12px;">Enviar Avaliação</button>
 </div>
 
-<!-- Modal Novo Endereço -->
+<!-- Modal Novo Endereço Formulario -->
 <div class="address-modal" id="modal-novo-endereco">
     <div class="address-modal-content">
         <h3 style="font-weight:900; margin-bottom:15px; font-size:1.2rem;">Novo Endereço</h3>
+        
         <div class="input-group">
             <label>Bairro *</label>
             <input type="text" id="new-end-bairro" placeholder="Ex: Centro">
         </div>
+        
         <div style="display:flex; gap:10px;">
             <div class="input-group" style="flex:2;">
                 <label>Rua *</label>
@@ -283,10 +282,12 @@
                 <input type="text" id="new-end-num" placeholder="Ex: 123">
             </div>
         </div>
+        
         <div class="input-group">
             <label>Complemento (Opcional)</label>
             <input type="text" id="new-end-comp" placeholder="Ex: Apto 204">
         </div>
+        
         <div style="display:flex; gap:10px; margin-top:20px;">
             <button class="btn-auth" style="background:#eee; color:#333;" onclick="closeAddressModal()">Cancelar</button>
             <button class="btn-auth" id="btn-salvar-end" onclick="saveNewAddress()">Salvar</button>
@@ -296,12 +297,10 @@
 
 <div class="toast" id="toast">Mensagem</div>
 
-<!-- ABA INÍCIO -->
 <div id="tab-home" class="app-view active">
     <header>
-        <div class="header-top">
+        <div class="header-top" style="justify-content: center;">
             <div class="brand-logo">Marketplace</div>
-            <div class="header-profile-btn" onclick="switchTab('profile')">👤 Perfil</div>
         </div>
     </header>
 
@@ -342,13 +341,11 @@
     </div>
 </div>
 
-<!-- ABA PEDIDOS (HISTÓRICO) -->
 <div id="tab-orders" class="app-view">
     <header><h2 style="font-weight:900; font-size:1.4rem;">Meus Pedidos</h2></header>
     <div id="orders-container"><p style="text-align:center; padding: 40px; color:#999; font-weight:800;">Faça login para ver seus pedidos.</p></div>
 </div>
 
-<!-- ABA PERFIL (AUTENTICAÇÃO E ENDEREÇOS) -->
 <div id="tab-profile" class="app-view">
     <header><h2 style="font-weight:900; font-size:1.4rem;">Meu Perfil</h2></header>
     
@@ -404,7 +401,6 @@
     </div>
 </div>
 
-<!-- ABA LOJA E CARDÁPIO -->
 <div id="tab-store" class="app-view">
     <div class="store-banner">
         <button class="btn-back-store" onclick="switchTab('home')">←</button>
@@ -431,7 +427,7 @@
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <span>Busca</span>
     </button>
-    <button class="nav-item" id="nav-orders" onclick="switchTab('orders')">
+    <button class="nav-item" id="nav-orders" style="display:none;" onclick="switchTab('orders')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Pedidos</span>
     </button>
@@ -450,7 +446,6 @@
     <button class="fc-btn">Ver sacola <span style="font-size:0.8rem; margin-left:5px;">&gt;</span></button>
 </div>
 
-<!-- MODAL DO PRODUTO (NOVO SISTEMA DE GRUPOS) -->
 <div id="product-modal">
     <button class="btn-back-store" style="position:absolute; top:20px; left:20px; z-index:260;" onclick="closeProductModal()">✕</button>
     <img id="pm-img" class="pm-img" src="" alt="Produto">
@@ -477,7 +472,6 @@
     </div>
 </div>
 
-<!-- GAVETA DA SACOLA (CHECKOUT COM SELEÇÃO DE ENDEREÇO) -->
 <div id="cart-drawer">
     <div class="cart-header"><span>Sua Sacola</span><button style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:#555;" onclick="closeCartDrawer()">✕</button></div>
     <div class="cart-body">
@@ -485,9 +479,7 @@
         <div class="checkout-card" id="checkout-form" style="display:none;">
             <div class="checkout-title">🚚 Entregar em:</div>
             
-            <div id="checkout-address-area">
-                <!-- Dropdown de endereços será injetado aqui -->
-            </div>
+            <div id="checkout-address-area"></div>
             
             <div class="input-group" style="margin-top:20px;">
                 <label>💳 Forma de Pagamento na Entrega</label>
@@ -506,7 +498,6 @@
     </div>
 </div>
 
-<!-- RASTREIO AO VIVO EMBUTIDO -->
 <div id="tracking-overlay">
     <div class="track-header">
         <span>Acompanhar Pedido</span>
@@ -535,8 +526,6 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvlhktyf9A_K91Dawb8mwmpxYLIKFGijbW9xn0r6HeEchIynzV5FI498oSVEqqxF1t/exec';
     // ==============================================================================
 
-
-    // REGISTRO PWA E NOTIFICAÇÕES
     let deferredPrompt;
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register(URL.createObjectURL(new Blob([`
@@ -650,11 +639,7 @@
         }).join('');
     }
 
-    function searchByCategory(cat) { 
-        switchTab('search'); 
-        document.getElementById('input-search').value = cat; 
-        executeSearch(cat); 
-    }
+    function searchByCategory(cat) { switchTab('search'); document.getElementById('input-search').value = cat; executeSearch(cat); }
 
     function executeSearch(query) {
         const q = query.toLowerCase().trim(); const resContainer = document.getElementById('search-results');
@@ -688,9 +673,7 @@
         document.getElementById('product-modal').style.display = 'flex';
     }
     
-    function closeProductModal() {
-        document.getElementById('product-modal').style.display = 'none';
-    }
+    function closeProductModal() { document.getElementById('product-modal').style.display = 'none'; }
 
     function renderAddonsUI() {
         const container = document.getElementById('pm-addons-container');
@@ -782,30 +765,98 @@
         fc.classList.add('visible');
     }
 
+    function openCartDrawer() {
+        if(cart.length === 0) return;
+        renderCartItems(); renderCheckoutAddresses();
+        document.getElementById('checkout-form').style.display = currentUser ? 'block' : 'none';
+        document.getElementById('btn-finalizar').innerText = currentUser ? 'Finalizar Pedido' : 'Fazer Login para Pedir';
+        document.getElementById('cart-drawer').style.display = 'flex';
+    }
+    
+    function closeCartDrawer() { document.getElementById('cart-drawer').style.display = 'none'; }
+
+    function renderCartItems() {
+        const list = document.getElementById('cart-items-list'); let sub = 0;
+        list.innerHTML = cart.map((item, index) => {
+            sub += item.unitPrice * item.qty;
+            const addonsText = item.addons.map(a => a.name).join(', ');
+            return `
+            <div class="cart-item">
+                <img src="${item.img}" class="cart-item-img" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100'">
+                <div class="cart-item-info">
+                    <div class="cart-item-title">${item.qty}x ${item.name}</div>
+                    ${addonsText ? `<div class="cart-item-details">${addonsText}</div>` : ''}
+                    ${item.obs ? `<div class="cart-item-details">Obs: ${item.obs}</div>` : ''}
+                    <div class="cart-item-price">R$ ${(item.unitPrice * item.qty).toFixed(2).replace('.',',')}</div>
+                </div>
+                <button class="cart-del-btn" onclick="removeCartItem(${index})">✕</button>
+            </div>`;
+        }).join('');
+        document.getElementById('cart-sub').innerText = `R$ ${sub.toFixed(2).replace('.',',')}`; document.getElementById('cart-tot').innerText = `R$ ${sub.toFixed(2).replace('.',',')}`;
+    }
+
+    function removeCartItem(index) { cart.splice(index, 1); localStorage.setItem('joy_cart', JSON.stringify(cart)); updateFloatingCart(); if(cart.length===0) closeCartDrawer(); else renderCartItems(); }
+
+    async function processCheckout() {
+        if(!currentUser) { closeCartDrawer(); switchTab('profile'); return; }
+        
+        const selAddress = document.getElementById('chk-endereco-select');
+        if(!selAddress) { showToast("Cadastre um endereço primeiro!"); return; }
+        const enderecoFinal = selAddress.value;
+        const pagamento = document.getElementById('chk-pag').value;
+        
+        const btn = document.getElementById('btn-finalizar'); btn.disabled = true; btn.innerText = "Enviando... ⏳";
+        
+        const lojaId = cart[0].lojaId; let sub = 0;
+        const itensFormatados = cart.map(i => { sub += i.unitPrice * i.qty; let text = `${i.qty}x ${i.name}`; if(i.addons.length>0) text+= ` (${i.addons.map(a=>a.name).join(', ')})`; if(i.obs) text+= ` - Obs: ${i.obs}`; return text; }).join(' | ');
+
+        try {
+            const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'saveOrder', lojaId: lojaId, cliente: currentUser.nome, telefone: currentUser.telefone, endereco: enderecoFinal, pagamento: pagamento, total: `R$ ${sub.toFixed(2).replace('.',',')}`, itens: itensFormatados, emailCliente: currentUser.email }) });
+            const data = await res.json();
+            if(data.status === 'success') { cart = []; localStorage.removeItem('joy_cart'); updateFloatingCart(); closeCartDrawer(); switchTab('orders'); showToast("Pedido enviado para a cozinha! 🍳"); } else { throw new Error("Erro no servidor"); }
+        } catch(e) { showToast("Falha ao enviar pedido. Tente novamente."); }
+        btn.disabled = false; btn.innerText = "Finalizar Pedido";
+    }
+
     function checkLoginStatus() {
+        const navOrders = document.getElementById('nav-orders');
         if(currentUser) {
             document.getElementById('profile-unauth').style.display = 'none';
             document.getElementById('profile-auth').style.display = 'block';
             document.getElementById('prof-nome').innerText = currentUser.nome;
             document.getElementById('prof-email').innerText = currentUser.email;
             document.getElementById('prof-tel').innerText = currentUser.telefone;
+            if (navOrders) navOrders.style.display = 'flex';
             renderAddresses();
+            
+            // Registra o email do cliente no OneSignal silenciosamente
+            if(window.OneSignalDeferred) {
+                OneSignalDeferred.push(function(OneSignal) {
+                    OneSignal.User.addTag("email", currentUser.email);
+                });
+            }
         } else {
             document.getElementById('profile-auth').style.display = 'none';
             document.getElementById('profile-unauth').style.display = 'block';
+            if (navOrders) navOrders.style.display = 'none'; // Esconde a aba de pedidos
             resetAuthUI();
         }
     }
 
     function resetAuthUI() {
-        authStep = 1; document.querySelectorAll('.input-group').forEach(el => el.style.display = 'none');
+        authStep = 1; document.querySelectorAll('#profile-unauth .input-group').forEach(el => el.style.display = 'none');
         document.getElementById('auth-email-group').style.display = 'block';
         document.getElementById('btn-auth-action').innerText = "Continuar";
         document.getElementById('auth-title').innerText = "Entrar no App";
         document.getElementById('auth-subtitle').innerText = "Faça login para fazer pedidos e salvar seus endereços.";
     }
 
-    function logout() { currentUser = null; localStorage.removeItem('joy_user'); checkLoginStatus(); }
+    function logout() { 
+        currentUser = null; 
+        localStorage.removeItem('joy_user'); 
+        checkLoginStatus(); 
+        if(document.getElementById('tab-orders').classList.contains('active')) { switchTab('home'); }
+    }
 
     function startRecoverClient() {
         authStep = 5; document.getElementById('auth-login-group').style.display = 'none';
@@ -845,7 +896,6 @@
         btn.disabled = false; if(authStep !== 4 && authStep !== 3 && authStep !== 6) btn.innerText = "Continuar";
     }
 
-    // =============== ENDEREÇOS ===============
     function openAddressModal() { document.getElementById('modal-novo-endereco').style.display = 'flex'; }
     function closeAddressModal() { 
         document.getElementById('modal-novo-endereco').style.display = 'none'; 
@@ -909,60 +959,6 @@
         }
     }
 
-    // =============== CHECKOUT ===============
-    function openCartDrawer() {
-        if(cart.length === 0) return;
-        renderCartItems(); renderCheckoutAddresses();
-        document.getElementById('checkout-form').style.display = currentUser ? 'block' : 'none';
-        document.getElementById('btn-finalizar').innerText = currentUser ? 'Finalizar Pedido' : 'Fazer Login para Pedir';
-        document.getElementById('cart-drawer').style.display = 'flex';
-    }
-    function closeCartDrawer() { document.getElementById('cart-drawer').style.display = 'none'; }
-
-    function renderCartItems() {
-        const list = document.getElementById('cart-items-list'); let sub = 0;
-        list.innerHTML = cart.map((item, index) => {
-            sub += item.unitPrice * item.qty;
-            const addonsText = item.addons.map(a => a.name).join(', ');
-            return `
-            <div class="cart-item">
-                <img src="${item.img}" class="cart-item-img" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100'">
-                <div class="cart-item-info">
-                    <div class="cart-item-title">${item.qty}x ${item.name}</div>
-                    ${addonsText ? `<div class="cart-item-details">${addonsText}</div>` : ''}
-                    ${item.obs ? `<div class="cart-item-details">Obs: ${item.obs}</div>` : ''}
-                    <div class="cart-item-price">R$ ${(item.unitPrice * item.qty).toFixed(2).replace('.',',')}</div>
-                </div>
-                <button class="cart-del-btn" onclick="removeCartItem(${index})">✕</button>
-            </div>`;
-        }).join('');
-        document.getElementById('cart-sub').innerText = `R$ ${sub.toFixed(2).replace('.',',')}`; document.getElementById('cart-tot').innerText = `R$ ${sub.toFixed(2).replace('.',',')}`;
-    }
-
-    function removeCartItem(index) { cart.splice(index, 1); localStorage.setItem('joy_cart', JSON.stringify(cart)); updateFloatingCart(); if(cart.length===0) closeCartDrawer(); else renderCartItems(); }
-
-    async function processCheckout() {
-        if(!currentUser) { closeCartDrawer(); switchTab('profile'); return; }
-        
-        const selAddress = document.getElementById('chk-endereco-select');
-        if(!selAddress) { showToast("Cadastre um endereço primeiro!"); return; }
-        const enderecoFinal = selAddress.value;
-        const pagamento = document.getElementById('chk-pag').value;
-        
-        const btn = document.getElementById('btn-finalizar'); btn.disabled = true; btn.innerText = "Enviando... ⏳";
-        
-        const lojaId = cart[0].lojaId; let sub = 0;
-        const itensFormatados = cart.map(i => { sub += i.unitPrice * i.qty; let text = `${i.qty}x ${i.name}`; if(i.addons.length>0) text+= ` (${i.addons.map(a=>a.name).join(', ')})`; if(i.obs) text+= ` - Obs: ${i.obs}`; return text; }).join(' | ');
-
-        try {
-            const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'saveOrder', lojaId: lojaId, cliente: currentUser.nome, telefone: currentUser.telefone, endereco: enderecoFinal, pagamento: pagamento, total: `R$ ${sub.toFixed(2).replace('.',',')}`, itens: itensFormatados, emailCliente: currentUser.email }) });
-            const data = await res.json();
-            if(data.status === 'success') { cart = []; localStorage.removeItem('joy_cart'); updateFloatingCart(); closeCartDrawer(); switchTab('orders'); showToast("Pedido enviado para a cozinha! 🍳"); } else { throw new Error("Erro no servidor"); }
-        } catch(e) { showToast("Falha ao enviar pedido. Tente novamente."); }
-        btn.disabled = false; btn.innerText = "Finalizar Pedido";
-    }
-
-    // =============== RASTREIO E AVALIAÇÕES ===============
     async function loadOrderHistory() {
         const container = document.getElementById('orders-container');
         if(!currentUser) { container.innerHTML = '<p style="text-align:center; padding: 40px; color:#999; font-weight:800; font-size:1.1rem;">Faça login para ver seus pedidos.</p>'; return; }
@@ -986,7 +982,6 @@
         } catch(e) { container.innerHTML = '<p style="text-align:center; color:red;">Erro ao buscar histórico.</p>'; }
     }
 
-    // AVALIAÇÃO INTELIGENTE
     function openRatingModal(pedidoId, lojaId) {
         rateOrderId = pedidoId; rateStoreId = lojaId; currentRating = 0; selectedReason = "";
         document.getElementById('rating-obs').value = '';
@@ -995,14 +990,10 @@
         document.getElementById('rating-overlay').classList.add('active'); document.getElementById('rating-sheet').classList.add('open');
     }
 
-    function closeRatingModal() {
-        document.getElementById('rating-overlay').classList.remove('active'); document.getElementById('rating-sheet').classList.remove('open');
-    }
+    function closeRatingModal() { document.getElementById('rating-overlay').classList.remove('active'); document.getElementById('rating-sheet').classList.remove('open'); }
 
     function setRating(val) {
-        currentRating = val;
-        updateStars();
-        // Lógica Inteligente: Mostrar motivos se nota <= 3
+        currentRating = val; updateStars();
         const reasonArea = document.getElementById('low-rating-area');
         if(val <= 3 && val > 0) { reasonArea.style.display = 'block'; } else { reasonArea.style.display = 'none'; selectedReason = ""; }
     }
@@ -1030,7 +1021,6 @@
         btn.disabled = false; btn.innerText = "Enviar Avaliação";
     }
 
-    // RASTREIO
     function openTracking(orderId) { activeTrackId = orderId; document.getElementById('tracking-overlay').style.display = 'flex'; checkTrackStatus(); trackInterval = setInterval(checkTrackStatus, 10000); }
     function closeTracking() { document.getElementById('tracking-overlay').style.display = 'none'; clearInterval(trackInterval); activeTrackId = null; }
 
