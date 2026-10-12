@@ -10,23 +10,19 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-<!-- CÓDIGO ONESIGNAL V16 CORRIGIDO PARA GITHUB PAGES -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "b85bcf3b-df80-476a-bacf-741995153efd",
-      notifyButton: {
-        enable: true,
-      },
-      // INSTRUÇÃO CRÍTICA PARA O GITHUB PAGES: 
-      // Diz ao OneSignal para procurar o ficheiro na subpasta 'Joyfood'
-      serviceWorkerParam: { scope: '/Joyfood/' },
-      serviceWorkerPath: 'Joyfood/OneSignalSDKWorker.js'
-    });
-  });
-</script>
+    <!-- CÓDIGO ONESIGNAL V16 -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "b85bcf3b-df80-476a-bacf-741995153efd",
+          notifyButton: {
+            enable: true, /* Ativa o sininho no canto da tela */
+          }
+        });
+      });
+    </script>
 
     <style>
         :root { --primary: #ea1d2c; --primary-dark: #cc1523; --white: #ffffff; --bg-color: #f7f7f8; --text-main: #3e3e3e; --text-light: #717171; --border: #f0f0f0; --success: #118c4f; --shadow: 0 2px 8px rgba(0,0,0,0.05); --safe-bottom: env(safe-area-inset-bottom, 20px); }
@@ -562,25 +558,55 @@
     }
 
     async function fetchMarketplaceData() {
+        // 1. Tentar carregar da memória (Cache Local) primeiro para ser INSTANTÂNEO
+        const cache = localStorage.getItem('joy_marketplace_data');
+        if (cache) {
+            try {
+                const data = JSON.parse(cache);
+                allStores = data.lojas.filter(l => l.aberto === true || String(l.aberto).toLowerCase() === 'true');
+                allProducts = data.produtos.filter(p => p.ativo !== false && String(p.ativo).toLowerCase() !== 'false');
+                renderStores();
+                
+                // Se o cliente já estiver dentro de uma loja, atualiza o menu na hora
+                if (currentStoreId) {
+                    const prodLoja = allProducts.filter(p => p.lojaid === currentStoreId);
+                    renderMenu(prodLoja, 'st-menu-container');
+                }
+            } catch(e) { console.error('Erro no cache', e); }
+        }
+
+        // 2. Ir no servidor (Google Sheets) em segundo plano buscar dados novos
         try {
             const res = await fetch(SCRIPT_URL); 
             const data = await res.json();
             if(data.status === 'success') {
+                // Salva os dados fresquinhos no cache para a próxima vez
+                localStorage.setItem('joy_marketplace_data', JSON.stringify(data));
+                
                 allStores = data.lojas.filter(l => l.aberto === true || String(l.aberto).toLowerCase() === 'true');
                 allProducts = data.produtos.filter(p => p.ativo !== false && String(p.ativo).toLowerCase() !== 'false');
+                
+                // Atualiza a tela discretamente com os dados reais
                 renderStores();
+                if (currentStoreId) {
+                    const prodLoja = allProducts.filter(p => p.lojaid === currentStoreId);
+                    renderMenu(prodLoja, 'st-menu-container');
+                }
             } else {
-                document.getElementById('stores-container').innerHTML = `<p style="text-align:center; padding:30px; color:red; font-weight:800;">Erro: ${data.message}</p>`;
+                if (!cache) document.getElementById('stores-container').innerHTML = `<p style="text-align:center; padding:30px; color:red; font-weight:800;">Erro: ${data.message}</p>`;
             }
         } catch (e) {
-            document.getElementById('stores-container').innerHTML = `
-            <div style="text-align:center; padding:40px 20px;">
-                <span style="font-size:3rem;">🔗</span>
-                <h3 style="color:#ea1d2c; font-weight:900; margin-top:10px;">Erro de Conexão</h3>
-                <p style="color:#666; font-weight:600; font-size:0.95rem; margin-top:10px;">
-                    Verifique a sua internet.
-                </p>
-            </div>`;
+            // Se der erro e não tiver cache (primeiro acesso sem net), mostra tela de erro
+            if (!cache) {
+                document.getElementById('stores-container').innerHTML = `
+                <div style="text-align:center; padding:40px 20px;">
+                    <span style="font-size:3rem;">🔗</span>
+                    <h3 style="color:#ea1d2c; font-weight:900; margin-top:10px;">Erro de Conexão</h3>
+                    <p style="color:#666; font-weight:600; font-size:0.95rem; margin-top:10px;">
+                        Verifique a sua internet.
+                    </p>
+                </div>`;
+            }
         }
     }
 
