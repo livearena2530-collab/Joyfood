@@ -10,12 +10,16 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1046/1046784.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- CÓDIGO ONESIGNAL V16 -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
           appId: "b85bcf3b-df80-476a-bacf-741995153efd",
+          notifyButton: {
+            enable: true, /* Ativa o sininho no canto da tela */
+          }
         });
       });
     </script>
@@ -267,11 +271,13 @@
     <div class="address-modal-content">
         <h3 style="font-weight:900; margin-bottom:15px; font-size:1.2rem;">Novo Endereço</h3>
         
+        <!-- Campo Bairro separado -->
         <div class="input-group">
             <label>Bairro *</label>
             <input type="text" id="new-end-bairro" placeholder="Ex: Centro">
         </div>
         
+        <!-- Campos Rua e Número divididos lado a lado -->
         <div style="display:flex; gap:10px;">
             <div class="input-group" style="flex:2;">
                 <label>Rua *</label>
@@ -298,6 +304,7 @@
 <div class="toast" id="toast">Mensagem</div>
 
 <div id="tab-home" class="app-view active">
+    <!-- ABA INÍCIO: Apenas a Logo, sem o ícone de perfil no topo -->
     <header>
         <div class="header-top" style="justify-content: center;">
             <div class="brand-logo">Marketplace</div>
@@ -427,6 +434,7 @@
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <span>Busca</span>
     </button>
+    <!-- Oculto por padrão, ativado apenas via JavaScript quando logado -->
     <button class="nav-item" id="nav-orders" style="display:none;" onclick="switchTab('orders')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Pedidos</span>
@@ -522,8 +530,9 @@
 <script>
     // ==============================================================================
     // 🚨 ATENÇÃO: COLE A URL DO SEU GOOGLE APPS SCRIPT AQUI ABAIXO 🚨
+    // Use a sua última URL do Apps Script aqui.
     // ==============================================================================
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvlhktyf9A_K91Dawb8mwmpxYLIKFGijbW9xn0r6HeEchIynzV5FI498oSVEqqxF1t/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7fh1zwHYDkxnI3bXEqt8k9PfdDKsaPoqiziw8MF2GNnNjGu8Trz4KG4parqULHgrYaw/exec';
     // ==============================================================================
 
     let deferredPrompt;
@@ -575,7 +584,7 @@
                 <span style="font-size:3rem;">🔗</span>
                 <h3 style="color:#ea1d2c; font-weight:900; margin-top:10px;">Erro de Conexão</h3>
                 <p style="color:#666; font-weight:600; font-size:0.95rem; margin-top:10px;">
-                    Você esqueceu de colar o seu link (<b>SCRIPT_URL</b>) no código, ou não autorizou o envio de e-mails no Apps Script!
+                    Verifique se o seu SCRIPT_URL está correto no código.
                 </p>
             </div>`;
         }
@@ -815,25 +824,31 @@
             document.getElementById('prof-nome').innerText = currentUser.nome;
             document.getElementById('prof-email').innerText = currentUser.email;
             document.getElementById('prof-tel').innerText = currentUser.telefone;
+            
+            // MOSTRA a aba de pedidos se estiver logado
             if (navOrders) navOrders.style.display = 'flex';
             renderAddresses();
             
-            // Registra o email do cliente no OneSignal silenciosamente
-            if(window.OneSignalDeferred) {
-                OneSignalDeferred.push(function(OneSignal) {
-                    OneSignal.User.addTag("email", currentUser.email);
-                });
-            }
+            // Registra o email do cliente no OneSignal silenciosamente V16
+            window.OneSignalDeferred = window.OneSignalDeferred || [];
+            OneSignalDeferred.push(function(OneSignal) {
+                OneSignal.User.addTag("email", currentUser.email);
+            });
+            
         } else {
             document.getElementById('profile-auth').style.display = 'none';
             document.getElementById('profile-unauth').style.display = 'block';
-            if (navOrders) navOrders.style.display = 'none'; // Esconde a aba de pedidos
+            
+            // ESCONDE a aba de pedidos se não estiver logado
+            if (navOrders) navOrders.style.display = 'none';
             resetAuthUI();
         }
     }
 
     function resetAuthUI() {
-        authStep = 1; document.querySelectorAll('#profile-unauth .input-group').forEach(el => el.style.display = 'none');
+        authStep = 1; 
+        // Esconde APENAS as caixinhas de login/senha (Sem esconder o endereço)
+        document.querySelectorAll('#profile-unauth .input-group').forEach(el => el.style.display = 'none');
         document.getElementById('auth-email-group').style.display = 'block';
         document.getElementById('btn-auth-action').innerText = "Continuar";
         document.getElementById('auth-title').innerText = "Entrar no App";
@@ -844,7 +859,10 @@
         currentUser = null; 
         localStorage.removeItem('joy_user'); 
         checkLoginStatus(); 
-        if(document.getElementById('tab-orders').classList.contains('active')) { switchTab('home'); }
+        // Se deslogar estando na aba pedidos, joga pra home
+        if(document.getElementById('tab-orders').classList.contains('active')) { 
+            switchTab('home'); 
+        }
     }
 
     function startRecoverClient() {
@@ -1024,7 +1042,7 @@
                 const eta = document.getElementById('tr-eta'); eta.style.display = 'block';
                 if(s === 'Novo') { document.getElementById('tr-step-Novo').classList.add('active', 'current'); eta.innerText = 'Aguardando Lojista...'; eta.style.background = '#fff3cd'; eta.style.color = '#856404'; }
                 else if (s === 'Preparando') { document.getElementById('tr-step-Novo').classList.add('active'); document.getElementById('tr-step-Preparando').classList.add('active', 'current'); eta.innerText = 'Previsão: 30 a 45 min'; eta.style.background = '#e8f5e9'; eta.style.color = '#118c4f'; }
-                else if (s === 'Entrega') { document.getElementById('tr-step-Novo').classList.add('active'); document.getElementById('tr-step-Preparando').classList.add('active'); document.getElementById('tr-step-Entrega').classList.add('active', 'current'); eta.innerText = 'Previsão: 10 a 15 min'; eta.style.background = '#e3f2fd'; eta.style.color = '#0d47a1'; }
+                else if (s === 'Entrega') { document.getElementById('step-novo').classList.add('active'); document.getElementById('tr-step-Preparando').classList.add('active'); document.getElementById('tr-step-Entrega').classList.add('active', 'current'); eta.innerText = 'Previsão: 10 a 15 min'; eta.style.background = '#e3f2fd'; eta.style.color = '#0d47a1'; }
                 else if (s === 'Concluido') { document.getElementById('tr-step-Novo').classList.add('active'); document.getElementById('tr-step-Preparando').classList.add('active'); document.getElementById('tr-step-Entrega').classList.add('active'); document.getElementById('tr-step-Concluido').classList.add('active', 'current'); eta.innerText = 'Pedido Entregue ✅'; eta.style.background = '#f0f0f0'; eta.style.color = '#555'; clearInterval(trackInterval); }
             }
         } catch(e) {}
