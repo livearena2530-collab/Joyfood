@@ -266,18 +266,15 @@
     <button class="pm-add-btn" id="btn-send-rate" onclick="sendRating()" style="width:100%; justify-content:center; padding:15px; border-radius:12px;">Enviar Avaliação</button>
 </div>
 
-<!-- Modal Novo Endereço Formulario -->
 <div class="address-modal" id="modal-novo-endereco">
     <div class="address-modal-content">
         <h3 style="font-weight:900; margin-bottom:15px; font-size:1.2rem;">Novo Endereço</h3>
         
-        <!-- Campo Bairro separado -->
         <div class="input-group">
             <label>Bairro *</label>
             <input type="text" id="new-end-bairro" placeholder="Ex: Centro">
         </div>
         
-        <!-- Campos Rua e Número divididos lado a lado -->
         <div style="display:flex; gap:10px;">
             <div class="input-group" style="flex:2;">
                 <label>Rua *</label>
@@ -304,7 +301,6 @@
 <div class="toast" id="toast">Mensagem</div>
 
 <div id="tab-home" class="app-view active">
-    <!-- ABA INÍCIO: Apenas a Logo, sem o ícone de perfil no topo -->
     <header>
         <div class="header-top" style="justify-content: center;">
             <div class="brand-logo">Marketplace</div>
@@ -334,7 +330,6 @@
     <div id="stores-container" class="stores-list"><div class="loader-spinner"></div></div>
 </div>
 
-<!-- ABA BUSCA (ISOLADA) -->
 <div id="tab-search" class="app-view">
     <div class="search-page-header">
         <h2 style="font-weight:900; margin-bottom:15px; font-size:1.4rem;">Busca</h2>
@@ -424,7 +419,6 @@
     <div class="menu-list" id="st-menu-container"></div>
 </div>
 
-<!-- BARRA DE NAVEGAÇÃO INFERIOR -->
 <nav class="bottom-nav">
     <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
@@ -434,7 +428,6 @@
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <span>Busca</span>
     </button>
-    <!-- Oculto por padrão, ativado apenas via JavaScript quando logado -->
     <button class="nav-item" id="nav-orders" style="display:none;" onclick="switchTab('orders')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Pedidos</span>
@@ -445,7 +438,6 @@
     </button>
 </nav>
 
-<!-- SACOLA FLUTUANTE -->
 <div id="floating-cart" class="floating-cart" onclick="openCartDrawer()">
     <div class="fc-info">
         <span class="fc-total" id="fc-total">R$ 0,00</span>
@@ -529,10 +521,9 @@
 
 <script>
     // ==============================================================================
-    // 🚨 ATENÇÃO: COLE A URL DO SEU GOOGLE APPS SCRIPT AQUI ABAIXO 🚨
-    // Use a sua última URL do Apps Script aqui.
+    // A sua URL ATUALIZADA DO GOOGLE APPS SCRIPT
     // ==============================================================================
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7fh1zwHYDkxnI3bXEqt8k9PfdDKsaPoqiziw8MF2GNnNjGu8Trz4KG4parqULHgrYaw/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxvlhktyf9A_K91Dawb8mwmpxYLIKFGijbW9xn0r6HeEchIynzV5FI498oSVEqqxF1t/exec';
     // ==============================================================================
 
     let deferredPrompt;
@@ -554,7 +545,6 @@
 
     window.onload = () => { 
         setStoreView(storeViewMode); fetchMarketplaceData(); checkLoginStatus(); updateFloatingCart();
-        if (currentUser && "Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") { Notification.requestPermission(); }
     };
 
     function switchTab(tabId) {
@@ -584,7 +574,7 @@
                 <span style="font-size:3rem;">🔗</span>
                 <h3 style="color:#ea1d2c; font-weight:900; margin-top:10px;">Erro de Conexão</h3>
                 <p style="color:#666; font-weight:600; font-size:0.95rem; margin-top:10px;">
-                    Verifique se o seu SCRIPT_URL está correto no código.
+                    Verifique a sua internet.
                 </p>
             </div>`;
         }
@@ -825,11 +815,11 @@
             document.getElementById('prof-email').innerText = currentUser.email;
             document.getElementById('prof-tel').innerText = currentUser.telefone;
             
-            // MOSTRA a aba de pedidos se estiver logado
+            // Mostra a aba pedidos
             if (navOrders) navOrders.style.display = 'flex';
             renderAddresses();
             
-            // Registra o email do cliente no OneSignal silenciosamente V16
+            // Etiqueta o celular do cliente no OneSignal v16 com o e-mail dele
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             OneSignalDeferred.push(function(OneSignal) {
                 OneSignal.User.addTag("email", currentUser.email);
@@ -839,7 +829,7 @@
             document.getElementById('profile-auth').style.display = 'none';
             document.getElementById('profile-unauth').style.display = 'block';
             
-            // ESCONDE a aba de pedidos se não estiver logado
+            // Esconde aba pedidos
             if (navOrders) navOrders.style.display = 'none';
             resetAuthUI();
         }
@@ -847,7 +837,7 @@
 
     function resetAuthUI() {
         authStep = 1; 
-        // Esconde APENAS as caixinhas de login/senha (Sem esconder o endereço)
+        // Esconde APENAS as caixas do login para não bugar o Modal de Endereço
         document.querySelectorAll('#profile-unauth .input-group').forEach(el => el.style.display = 'none');
         document.getElementById('auth-email-group').style.display = 'block';
         document.getElementById('btn-auth-action').innerText = "Continuar";
@@ -859,10 +849,7 @@
         currentUser = null; 
         localStorage.removeItem('joy_user'); 
         checkLoginStatus(); 
-        // Se deslogar estando na aba pedidos, joga pra home
-        if(document.getElementById('tab-orders').classList.contains('active')) { 
-            switchTab('home'); 
-        }
+        if(document.getElementById('tab-orders').classList.contains('active')) { switchTab('home'); }
     }
 
     function startRecoverClient() {
