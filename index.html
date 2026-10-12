@@ -820,9 +820,11 @@
             renderAddresses();
             
             // Etiqueta o celular do cliente no OneSignal v16 com o e-mail dele
+            // e forca o pedido de permissao se ele estiver usando o app instalado
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             OneSignalDeferred.push(function(OneSignal) {
                 OneSignal.User.addTag("email", currentUser.email);
+                OneSignal.Notifications.requestPermission();
             });
             
         } else {
