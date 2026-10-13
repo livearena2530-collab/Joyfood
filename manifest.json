@@ -1,7 +1,6 @@
 {
 "name": "Marketplace Oficial",
-"short_name": "
-Juaba Delivery",
+"short_name": "Juaba Delivery",
 "description": "Peça os seus pratos favoritos das melhores lojas da região.",
 "start_url": "./index.html",
 "display": "standalone",
