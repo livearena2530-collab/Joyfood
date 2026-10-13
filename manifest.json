@@ -10,13 +10,13 @@
 "scope": ".",
 "icons": [
 {
-"src": "logo.ico",
+"src": "https://github.com/livearena2530-collab/Bd-Imagens/blob/main/logo.png?raw=true",
 "sizes": "150x150",
 "type": "image/png",
 "purpose": "any maskable"
 },
 {
-"src": "logo.png",
+"src": "https://github.com/livearena2530-collab/Bd-Imagens/blob/main/logo.png?raw=true",
 "sizes": "512x512",
 "type": "image/png",
 "purpose": "any maskable"
